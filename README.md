@@ -1,7 +1,9 @@
-# Neo4j graph tool - migrating with ease
+# Neo4j Graph Tool
 
-**We are coming soon!**
+Schema migration tool that helps you automate DB migration across environments and in CI/CD pipelines.
 
---
+This boilerplate is dependent [Neo4j Graph Tool core](https://github.com/indykite/neo4j-graph-tool-core), which contains the codebase.
+And consist of 2 main parts:
 
-We worked hard to finish the tool before the [GraphConnect 2022](https://www.graphconnect.com/), but we stil want to fine tune it more.
+- Supervisor - is Docker image entrypoint replacement. Expose HTTP server that can manage underlying Neo4j instance together with running migrations.
+- Graph Tool CLI - is binary, that can be used to connect to any Neo4j DB server and perform migrations there.

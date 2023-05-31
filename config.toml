@@ -1,0 +1,10 @@
+[supervisor]
+initial_batch = "data"
+cypher_shell_format = "verbose"
+#log_level="trace"
+
+[planner]
+base_folder = 'import'
+
+[planner.allowed_commands]
+graph-tool = "/app/graph-tool"
