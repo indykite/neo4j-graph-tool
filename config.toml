@@ -1,10 +1,79 @@
+# ===  Configuration ===
+# This is configuration for whole Graph Tool in TOML format.
+# But we support also JSON, YAML, and much more which Viper library supports.
+# https://github.com/spf13/viper#what-is-viper
+#
+# We support also ENV vars in format of `GT_SECTION_ATTR`.
+# For example Neo4j Auth can be set via `GT_SUPERVISOR_NEO4J_AUTH` etc.
+
+# Supervisor part is not mandatory. If you will not be using it, this part can be skipped
 [supervisor]
-initial_batch = "data"
-cypher_shell_format = "verbose"
-#log_level="trace"
+    # On which port supervisor will expose HTTP server.
+    # Default value is 8080
+    # port = 5566
+
+    # Level of logging into console, possible values are: fatal, error, warn, warning, info, debug, trace.
+    # Default value is info
+    # log_level = 'warn'
+
+    # Graph version which will be DB migrated to after startup. If not defined, the last one is automatically selected.
+    # default_graph_version = 'v1.0.0'
+
+    # Batch that is used during starting supervisor.
+    # Default value is "schema"
+    # initial_batch = "data"
+
+    # Username and password of the DB. Supervisor needs this to be able to connect into it.
+    # Can be empty if no auth is required. But most likely this will be set.
+    neo4j_auth = "username/password"
+
+    # Name of DB to query. If not specified, default DB for logged in user is selected automatically by Neo4j.
+    # neo4j_database="neo4j"
 
 [planner]
-base_folder = 'import'
+    # Name of the folder where all migration files are located.
+    # Default is 'import'
+    # base_folder = 'import'
 
+    # Path to file relative to base folder, where is cleaning script to delete all from DB.
+    # Is used only when Refresh data is triggered by supervisor to clean up and seed from scratch or from custom command.
+    # drop_cypher_file = 'drop.cypher'
+
+    # Specify value that is passed as a value of --format flag for cypher-shell.
+    # Default value is "auto"
+    # cypher_shell_format = "verbose"
+
+# Which commands are allowed to be executed in *.run migration files, and their location.
+# This is useful for situations, when migration cannot be done in simple Cypher way.
 [planner.allowed_commands]
-graph-tool = "/app/graph-tool"
+# graph-tool = "/app/graph-tool"
+
+# Schema is considered as base folder, which set ground-truth for version.
+# See folder and batches for more granular settings.
+[planner.schema_folder]
+# Folder name inside base_folder.
+# Default is 'schema'
+# folder_name = 'base-schema'
+
+# Specify which migration files are included, if only change (up files), or both up and down files.
+# Default value is 'up_down'
+# migration_type = 'change'
+
+# Labels that the nodes, which stores applied version, should have.
+# If not specified, automatically set to ['GraphToolMigration', folder_name+'Version']. The second will result in SchemaVersion.
+# node_labels = ["SchemaVersion"]
+
+# Folders set additional set of folder which can apply more migrations alongside with Schema.
+[planner.folders]
+# Key of row is folder name.
+# Migration type is 'change' or 'up_down' same as at planner.schema_folder.migration_type.
+# NodeLabels are labels for Node storing applied files. If not specified, GraphToolMigration is added with folder_name+'Version'.
+# data = {migration_type = 'change', node_labels = ['DataVersion']}
+# perf = {migration_type = 'change', node_labels = ['PerfVersion']}
+
+# Batches are groups of folders executed either on starup (supervisor.initial_batch) or when refreshing data,
+# or plan/apply command.
+# Each batch consist of folder names that are executed, schema folder is always involved.
+[planner.batches]
+# testdata = { folders = ['data'] }
+# performance = { folders = ['data', 'perf'] }

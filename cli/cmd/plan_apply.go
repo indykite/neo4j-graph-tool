@@ -20,6 +20,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/indykite/neo4j-graph-tool-core/config"
 	"github.com/indykite/neo4j-graph-tool-core/migrator"
 	"github.com/spf13/cobra"
 )
@@ -30,7 +31,7 @@ var (
 	forceRunApplyFlag bool
 )
 
-func preparePlan() *migrator.ExecutionSteps {
+func preparePlan() (*config.Config, *migrator.ExecutionSteps) {
 	cfg := loadPlannerConfig()
 	version := queryVersion(cfg)
 
@@ -55,10 +56,10 @@ func preparePlan() *migrator.ExecutionSteps {
 		er(err)
 	}
 
-	return execSteps
+	return cfg, execSteps
 }
 
-func executePlan(execSteps *migrator.ExecutionSteps, forceRun bool) {
+func executePlan(cfg *config.Config, execSteps *migrator.ExecutionSteps, forceRun bool) {
 	if len(*execSteps) == 0 {
 		fmt.Printf("%sThe plan is empty%s\n", colorCyan, colorReset)
 		return
@@ -94,9 +95,11 @@ func executePlan(execSteps *migrator.ExecutionSteps, forceRun bool) {
 	for _, step := range *execSteps {
 		var cmd *exec.Cmd
 		if step.IsCypher() {
-			// TODO: fix format and take it from config
 			// #nosec G204
-			cmd = exec.Command("/app/cypher-shell/bin/cypher-shell", "-a", getAddress(), "--format", "verbose")
+			cmd = exec.Command(
+				"/app/cypher-shell/bin/cypher-shell",
+				"-a", getAddress(),
+				"--format", cfg.Planner.CypherShellFormat)
 			cmd.Stdin = step.Cypher()
 		} else {
 			toExec := step.Command()
@@ -130,7 +133,8 @@ var applyCmd = &cobra.Command{
   configuration or an execution plan can be provided. Execution plans can be
   used to only execute a pre-determined set of actions`,
 	Run: func(cmd *cobra.Command, args []string) {
-		executePlan(preparePlan(), forceRunApplyFlag)
+		cfg, steps := preparePlan()
+		executePlan(cfg, steps, forceRunApplyFlag)
 	},
 }
 
@@ -144,7 +148,8 @@ var planCmd = &cobra.Command{
   sense for what cypher-shell will do. Optionally, the plan can be saved to
   a file, and apply can take this plan file to execute this plan exactly.`,
 	Run: func(_ *cobra.Command, _ []string) {
-		fmt.Print(preparePlan())
+		_, steps := preparePlan()
+		fmt.Print(steps)
 	},
 }
 
