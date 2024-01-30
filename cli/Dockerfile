@@ -24,7 +24,7 @@ RUN update-ca-certificates && \
 
 
 # Second stage, use JRE to minimize Docker image size
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21.0.2_13-jre-alpine
 
 WORKDIR /app/
 

@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/indykite/neo4j-graph-tool-core v0.0.0-20230419142233-d347a480f936
-	github.com/neo4j/neo4j-go-driver/v4 v4.4.7
+	github.com/neo4j/neo4j-go-driver/v5 v5.17.0
 	github.com/spf13/cobra v1.7.0
 )
 
@@ -32,6 +32,7 @@ require (
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/neo4j/neo4j-go-driver/v4 v4.4.5 // indirect
 	github.com/onsi/ginkgo/v2 v2.9.4 // indirect
 	github.com/onsi/gomega v1.27.6 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.7 // indirect
