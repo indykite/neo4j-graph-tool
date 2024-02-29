@@ -16,6 +16,7 @@
 package cmd
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -23,22 +24,15 @@ import (
 	"github.com/indykite/neo4j-graph-tool-core/config"
 	"github.com/indykite/neo4j-graph-tool-core/migrator"
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
+	neo4jcfg "github.com/neo4j/neo4j-go-driver/v5/neo4j/config"
 	"github.com/spf13/cobra"
 )
-
-type neo4jSecret struct {
-	Host     string `json:"host"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-}
 
 var (
 	configPath string
 	address    string
 	username   string
 	password   string
-
-	neo4jSecretVal *neo4jSecret
 )
 
 const (
@@ -96,19 +90,19 @@ func loadPlannerConfig() *config.Config {
 	return c
 }
 
-func queryVersion(c *config.Config) migrator.DatabaseModel {
-	d, err := newDriver()
+func queryVersion(ctx context.Context, c *config.Config) migrator.DatabaseModel {
+	d, err := newDriver(ctx)
 	if err != nil {
 		er(err)
 	}
-	defer func() { _ = d.Close() }()
+	defer func() { _ = d.Close(ctx) }()
 
 	p, err := migrator.NewPlanner(c)
 	if err != nil {
 		er(err)
 	}
 
-	dbm, err := p.Version(d)
+	dbm, err := p.Version(ctx, d.NewSession(ctx, neo4j.SessionConfig{AccessMode: neo4j.AccessModeRead}))
 	if err != nil {
 		er(err)
 	}
@@ -134,13 +128,17 @@ func getPassword() string {
 	return os.Getenv("NEO4J_PASSWORD")
 }
 
-func newDriver() (neo4j.Driver, error) {
+func newDriver(ctx context.Context) (neo4j.DriverWithContext, error) {
 	if getUsername() == "" || getPassword() == "" {
 		return nil, errors.New("missing username/password")
 	}
-	return neo4j.NewDriver(getAddress(), neo4j.BasicAuth(getUsername(), getPassword(), ""), func(config *neo4j.Config) {
-		config.UserAgent = "neo4j-tool/1.0 (IndyKite)"
-	})
+	return neo4j.NewDriverWithContext(
+		getAddress(),
+		neo4j.BasicAuth(getUsername(), getPassword(), ""),
+		func(c *neo4jcfg.Config) {
+			c.UserAgent = "neo4j-tool/1.0 (IndyKite)"
+		},
+	)
 }
 
 func getEnvWithDefault(key, defaultValue string) string {

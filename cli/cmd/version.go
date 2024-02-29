@@ -26,8 +26,8 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Query the Graph Model Version",
 	Long:  `Connects to Neo4J and query the current model version.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		mv := queryVersion(loadPlannerConfig())
+	Run: func(cmd *cobra.Command, _ []string) {
+		mv := queryVersion(cmd.Context(), loadPlannerConfig())
 		data, err := json.MarshalIndent(mv, "", "  ")
 		fmt.Printf("%s %v", data, err)
 	},

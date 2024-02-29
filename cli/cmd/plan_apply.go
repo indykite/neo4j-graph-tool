@@ -15,6 +15,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -31,9 +32,9 @@ var (
 	forceRunApplyFlag bool
 )
 
-func preparePlan() (*config.Config, *migrator.ExecutionSteps) {
+func preparePlan(ctx context.Context) (*config.Config, *migrator.ExecutionSteps) {
 	cfg := loadPlannerConfig()
-	version := queryVersion(cfg)
+	version := queryVersion(ctx, cfg)
 
 	p, err := migrator.NewPlanner(cfg)
 	if err != nil {
@@ -132,8 +133,8 @@ var applyCmd = &cobra.Command{
   and applies the changes appropriately. However, a path to another
   configuration or an execution plan can be provided. Execution plans can be
   used to only execute a pre-determined set of actions`,
-	Run: func(cmd *cobra.Command, args []string) {
-		cfg, steps := preparePlan()
+	Run: func(cmd *cobra.Command, _ []string) {
+		cfg, steps := preparePlan(cmd.Context())
 		executePlan(cfg, steps, forceRunApplyFlag)
 	},
 }
@@ -147,8 +148,8 @@ var planCmd = &cobra.Command{
   This execution plan can be reviewed prior to running apply to get a
   sense for what cypher-shell will do. Optionally, the plan can be saved to
   a file, and apply can take this plan file to execute this plan exactly.`,
-	Run: func(_ *cobra.Command, _ []string) {
-		_, steps := preparePlan()
+	Run: func(cmd *cobra.Command, _ []string) {
+		_, steps := preparePlan(cmd.Context())
 		fmt.Print(steps)
 	},
 }
