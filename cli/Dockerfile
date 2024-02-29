@@ -1,6 +1,6 @@
 # This Dockerfile must be executed from parent folder with `make graph-tool-build`
 
-FROM golang:1.20-bullseye AS builder
+FROM golang:1.22-bullseye AS builder
 # Regularly update from https://neo4j.com/download-center/#cypher-shell
 ARG CYPHER_SHELL_VERSION=5.6.0
 
@@ -24,7 +24,7 @@ RUN update-ca-certificates && \
 
 
 # Second stage, use JRE to minimize Docker image size
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21.0.2_13-jre-alpine
 
 WORKDIR /app/
 
