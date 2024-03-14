@@ -6,7 +6,7 @@ toolchain go1.22.0
 
 require (
 	github.com/indykite/neo4j-graph-tool-core v0.1.2
-	github.com/neo4j/neo4j-go-driver/v5 v5.17.0
+	github.com/neo4j/neo4j-go-driver/v5 v5.18.0
 	github.com/spf13/cobra v1.8.0
 )
 
