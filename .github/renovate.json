@@ -1,8 +1,6 @@
 {
     "extends": [
-      "github>indykite/.github//.github/renovate.json5",
-      "schedule:weekly",
-      ":disableDependencyDashboard"
+      "github>indykite/.github//.github/renovate.json5"
     ],
     "semanticCommits": "disabled",
     "commitMessagePrefix": "chore(deps): ",
