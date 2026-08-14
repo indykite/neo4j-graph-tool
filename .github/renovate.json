@@ -1,7 +1,7 @@
 {
     "extends": [
       "github>indykite/.github//.github/renovate.json5",
-      "config:base",
+      "config:recommended",
       "schedule:weekly",
       ":disableDependencyDashboard"
     ],
