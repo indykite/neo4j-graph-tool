@@ -2,7 +2,7 @@ module github.com/indykite/neo4j-graph-tool
 
 go 1.22.0
 
-toolchain go1.23.4
+toolchain go1.25.13
 
 require (
 	github.com/indykite/neo4j-graph-tool-core v0.1.4
