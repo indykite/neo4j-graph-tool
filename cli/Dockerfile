@@ -1,6 +1,6 @@
 # This Dockerfile must be executed from parent folder with `make graph-tool-build`
 
-FROM golang:1.23-bullseye AS builder
+FROM golang:1.24-bullseye@sha256:2cdc80dc25edcb96ada1654f73092f2928045d037581fa4aa7c40d18af7dd85a AS builder
 # Regularly update from https://neo4j.com/download-center/#cypher-shell
 ARG CYPHER_SHELL_VERSION=5.6.0
 
