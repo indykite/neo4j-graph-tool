@@ -23,8 +23,8 @@ import (
 
 	"github.com/indykite/neo4j-graph-tool-core/config"
 	"github.com/indykite/neo4j-graph-tool-core/migrator"
-	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
-	neo4jcfg "github.com/neo4j/neo4j-go-driver/v5/neo4j/config"
+	"github.com/neo4j/neo4j-go-driver/v6/neo4j"
+	neo4jcfg "github.com/neo4j/neo4j-go-driver/v6/neo4j/config"
 	"github.com/spf13/cobra"
 )
 
