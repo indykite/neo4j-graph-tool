@@ -1,5 +1,5 @@
 # Build supervisor and graph-tool with go
-FROM golang:1.26-alpine@sha256:70b46548e42db77e0966aaf3619fd068734dc6c77584d526b91126504fd95816 AS supervisor
+FROM golang:1.26-alpine@sha256:28d89ee9cc0ff9fec75c82ca201e6bf7fdf9a679d4b7b24dfa04f2bb766bb468 AS supervisor
 # Label is used in makefile to delete intermediate images from multistage build
 LABEL stage=supervisor_builder
 WORKDIR /go/src/github.com/indykite/neo4j-graph-tool
@@ -12,7 +12,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     chmod u+x ./supervisor ./graph-tool ./entrypoint.sh
 
 # Build final image
-FROM neo4j:5.26-enterprise@sha256:820ec7ee6f128a584bd46a1d2c0220d4364d6a5bafa9f383caca642ada3471b4
+FROM neo4j:5.26-enterprise@sha256:09528aeece2d6bc0158655f12035cc142fac5b6afd5b38160a1df27fb3f2a156
 
 COPY --from=supervisor \
     /go/src/github.com/indykite/neo4j-graph-tool/supervisor \
