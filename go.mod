@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/indykite/neo4j-graph-tool-core v0.1.5
-	github.com/neo4j/neo4j-go-driver/v6 v6.2.0
+	github.com/neo4j/neo4j-go-driver/v6 v6.3.0
 	github.com/spf13/cobra v1.10.2
 )
 
